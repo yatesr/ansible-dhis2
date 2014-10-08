@@ -1,0 +1,84 @@
+---
+- include_vars: "{{ item }}"
+  with_first_found:
+   - "../vars/{{ ansible_distribution }}.yml"
+   - "../vars/{{ ansible_os_family }}.yml"
+
+- include: cleanup.yml
+  when: dhis2_deploy
+
+# Install required packages
+- name: Install dhis2 required pacakges (Debian)
+  apt: name={{item}}
+       state=present
+       update_cache=yes
+       cache_valid_time=86400
+  with_items:
+    - openjdk-7-jre-headless
+    - tomcat7
+    - postgresql-9.3
+    - python-psycopg2
+    - nginx
+  when: ansible_os_family == 'Debian'
+
+- name: Install dhis2 required packages (RedHat 7)
+  yum: name={{item}}
+       state=present
+  with_items:
+    - java-1.7.0-openjdk-headless
+    - tomcat
+    - postgresql
+    - python-psycopg2
+    - nginx
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+
+# Install/Deploy dhis2
+- include: deploy.yml
+  when: dhis2_deploy
+
+- include: install.yml
+  when: !dhis2_deploy
+
+# Config
+- name: Create dhis2 user
+  user: name={{dhis2_user}}
+        state=present
+        system=yes
+        shell=/bin/sh
+
+- name: Create dir to store dhis2 info
+  file: path={{dhis2_dir}}
+        state=directory
+        owner={{dhis2_user}}
+        group={{dhis2_user}}
+
+## Install guide calls for timzone and locale install here
+
+
+- name: Create dhis postgres user
+  sudo_user: postgres
+  postgresql_user: name=dhis
+                   password={{dhis2_db_password}}
+                   state=present
+
+- name: Create dhis2 postgres db
+  sudo_user: postgres
+  postgresql_db: name=dhis2
+                 state=present
+                 owner=dhis
+
+## Postgres performance tuning here
+
+## Create hibernate.properties  here?
+
+- name: Insert setenv.sh
+  template: src=setenv.sh.j2
+            dest="/usr/share/{{tomcat_name}}/bin/setenv.sh"
+
+- name: Start tomcat and enable on boot
+  service: name={{tomcat_name}}
+           state=started
+           enable=yes
+
+
+

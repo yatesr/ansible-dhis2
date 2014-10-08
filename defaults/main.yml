@@ -1,0 +1,14 @@
+---
+# Deploy dhis2 from local war
+dhis2_deploy: false
+# location of war to deploy if above is true
+dhis2_war_loc:
+# Location of webapps tomcat directory
+dhis2_tomcat_webapps: "/var/lib/{{tomcat_name}}/webapps"
+# Location of dhis2 config
+dhis2_dir: /opt/dhis2
+# User that will run dhis2
+dhis2_user: dhis2
+# Postgresqql password for the dhis user
+dhis2_db_password: dhis2_password
+

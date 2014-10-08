@@ -1,0 +1,4 @@
+- name: Deploy dhis war file
+  copy: src={{dhis2_war_loc}}
+        dest={{dhis2_tomcat_webapps}}
+        
