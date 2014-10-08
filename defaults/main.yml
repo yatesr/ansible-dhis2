@@ -8,7 +8,7 @@ dhis2_tomcat_webapps: "/var/lib/{{tomcat_name}}/webapps"
 # Location of dhis2 config
 dhis2_dir: /opt/dhis2
 # User that will run dhis2
-dhis2_user: dhis2
+dhis2_user: "{{tomcat_name}}"
 # Postgresqql password for the dhis user
 dhis2_db_password: dhis2_password
 

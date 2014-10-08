@@ -37,14 +37,12 @@
   when: dhis2_deploy
 
 - include: install.yml
-  when: !dhis2_deploy
+  when: not dhis2_deploy
 
 # Config
 - name: Create dhis2 user
   user: name={{dhis2_user}}
         state=present
-        system=yes
-        shell=/bin/sh
 
 - name: Create dir to store dhis2 info
   file: path={{dhis2_dir}}
@@ -69,16 +67,23 @@
 
 ## Postgres performance tuning here
 
-## Create hibernate.properties  here?
+- name: Insert hibernate.properties
+  template: src=hibernate.properties.j2
+            dest={{dhis2_dir}}
 
 - name: Insert setenv.sh
   template: src=setenv.sh.j2
             dest="/usr/share/{{tomcat_name}}/bin/setenv.sh"
 
+- name: Set permissions on {{dhis2_dir}}
+  file: path={{dhis2_dir}}
+        recurse=yes
+        state=directory
+        owner={{dhis2_user}}
+        group={{dhis2_user}}
+
 - name: Start tomcat and enable on boot
   service: name={{tomcat_name}}
            state=started
-           enable=yes
-
-
+           enabled=yes
 
