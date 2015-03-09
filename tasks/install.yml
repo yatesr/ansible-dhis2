@@ -1,0 +1,3 @@
+- name: Download DHIS2 ({{dhis2_version}}
+  get_url: dest={{dhis2_tomcat_webapps}}/dhis.war
+           url={{dhis2_download_url}}

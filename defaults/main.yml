@@ -12,3 +12,7 @@ dhis2_db_password: dhis2_password
 dhis2_deploy: false
 # location of war to deploy if above is true
 dhis2_war_loc:
+
+# Version of dhis2 to install
+dhis2_version: 2.18
+dhis2_download_url: https://www.dhis2.org/download/releases/{{dhis2_version}}/dhis.war

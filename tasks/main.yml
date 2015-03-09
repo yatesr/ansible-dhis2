@@ -71,6 +71,10 @@
   template: src=hibernate.properties.j2
             dest={{dhis2_dir}}
 
+- name: ensure bin folder exists
+  file: path="/usr/share/{{tomcat_name}}/bin"
+        state=directory
+
 - name: Insert setenv.sh
   template: src=setenv.sh.j2
             dest="/usr/share/{{tomcat_name}}/bin/setenv.sh"
