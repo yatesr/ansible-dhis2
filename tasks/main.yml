@@ -18,7 +18,6 @@
     - tomcat7
     - postgresql-9.3
     - python-psycopg2
-    - nginx
   when: ansible_os_family == 'Debian'
 
 - name: Install dhis2 required packages (RedHat 7)
@@ -29,7 +28,6 @@
     - tomcat
     - postgresql
     - python-psycopg2
-    - nginx
   when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
 
 # Install/Deploy dhis2
